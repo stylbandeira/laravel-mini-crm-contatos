@@ -12,6 +12,7 @@ Você deverá construir uma pequena API REST para gerenciar contatos e acompanha
 
 ### Modelo `Contact`
 
+<<<<<<< HEAD
 | Campo          | Tipo                                                   | Regras / Default                            |
 | -------------- | ------------------------------------------------------ | ------------------------------------------- |
 | `id`           | bigint / PK                                            | auto-increment                              |
@@ -32,6 +33,28 @@ Você deverá construir uma pequena API REST para gerenciar contatos e acompanha
 | GET    | `/api/contacts/{id}` | Mostrar contato                                 |
 | PUT    | `/api/contacts/{id}` | Atualizar contato                               |
 | DELETE | `/api/contacts/{id}` | Excluir contato (soft)                          |
+=======
+| Campo          | Tipo                                                   | Regras / Default                            |
+| -------------- | ------------------------------------------------------ | ------------------------------------------- |
+| `id`           | bigint / PK                                            | auto-increment                              |
+| `name`         | string                                                 | obrigatório                                 |
+| `email`        | string único                                           | obrigatório \| formato e-mail               |
+| `phone`        | string                                                 | obrigatório                                 |
+| `score`        | integer                                                | default **0**                               |
+| `status`       | string (Enum)                                          | `pending`, `processing`, `active`, `failed` |
+| `processed_at` | timestamp nullable                                     | preenchido após processamento do score      |
+| Timestamps     | `created_at`, `updated_at`, `deleted_at` (soft delete) |
+
+### Endpoints CRUD
+
+| Método | Rota                 | Ação                                            |
+| ------ | -------------------- | ----------------------------------------------- |
+| POST   | `/api/contacts`      | Criar contato (inicia como `pending` e score 0) |
+| GET    | `/api/contacts`      | Listar contatos (com paginação)                 |
+| GET    | `/api/contacts/{id}` | Mostrar contato                                 |
+| PUT    | `/api/contacts/{id}` | Atualizar contato                               |
+| DELETE | `/api/contacts/{id}` | Excluir contato (soft)                          |
+>>>>>>> dd32169cca1d28d61b34d3f382aaa672160736ba
 
 ### Fluxo de Processamento de Score (Regras de Negócio)
 

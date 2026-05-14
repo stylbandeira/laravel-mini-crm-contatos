@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Contact;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ContactRepository
 {
@@ -16,6 +17,11 @@ class ContactRepository
     public function all()
     {
         return $this->contact->all();
+    }
+
+    public function paginate(int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->contact->paginate($perPage);
     }
 
     public function find($id)

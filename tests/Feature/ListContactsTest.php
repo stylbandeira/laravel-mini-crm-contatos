@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Resources\BaseContactResource;
 use App\Models\Contact;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -60,6 +61,21 @@ class ListContactsTest extends TestCase
             'to',
             'total',
         ])
+            ->assertStatus(200);
+    }
+
+    /**
+     * Return if a list of contacts returns paginated.
+     */
+    public function test_returned_data_fields(): void
+    {
+        $contact = Contact::factory()->create();
+
+        $response = $this->getJson('/api/contacts');
+
+        $response->assertJsonFragment(
+            (new BaseContactResource($contact))->response()->getData(true)
+        )
             ->assertStatus(200);
     }
 }

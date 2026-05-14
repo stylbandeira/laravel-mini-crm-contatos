@@ -10,6 +10,8 @@ use Tests\TestCase;
 
 class ShowContactTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
@@ -17,11 +19,12 @@ class ShowContactTest extends TestCase
     {
         $contact = Contact::factory()->create();
 
-        $response = $this->get('/api/contacts');
+        $response = $this->get('/api/contacts/' . $contact->id);
 
-        $response->assertJsonFragment(
-            (new BaseContactResource($contact))->response()->getData(true)
-        )
+        $response
+            ->assertJsonFragment(
+                (new BaseContactResource($contact))->response()->getData(true)
+            )
             ->assertStatus(200);
     }
 }

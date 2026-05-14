@@ -76,7 +76,7 @@ class ListContactsTest extends TestCase
     }
 
     /**
-     * Return if a list of contacts returns paginated.
+     * Return if the data fields corresponds to the resource.
      */
     public function test_returned_data_fields(): void
     {

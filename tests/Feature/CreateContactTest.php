@@ -47,41 +47,47 @@ class CreateContactTest extends TestCase
     }
 
     /**
-     * Assert that a created contact with no name fails.
+     * Assert that a required fields are required.
      */
-    public function test_created_contact_with_no_name_dont_pass(): void
+    public function test_validation_required_fields(): void
     {
         $response = $this->postJson('/api/contacts', [
             'email' => 'maria@email.com',
             'phone' => '87996236447',
         ]);
 
-        $response->assertJsonValidationErrorFor('name');
-    }
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors('name');
 
-    /**
-     * Assert that a created contact with no email fails.
-     */
-    public function test_created_contact_with_no_email_dont_pass(): void
-    {
         $response = $this->postJson('/api/contacts', [
             'name' => 'Maria de Lourdes',
             'phone' => '87996236447',
         ]);
 
-        $response->assertJsonValidationErrorFor('email');
-    }
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors('email');
 
-    /**
-     * Assert that a created contact with no phone fails.
-     */
-    public function test_created_contact_with_no_phone_dont_pass(): void
-    {
         $response = $this->postJson('/api/contacts', [
             'name' => 'Maria de Lourdes',
             'email' => 'maria@email.com',
         ]);
 
-        $response->assertJsonValidationErrorFor('phone');
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors('phone');
+    }
+
+    /**
+     * Assert that a email is an email.
+     */
+    public function test_validation_email_type(): void
+    {
+        $response = $this->postJson('/api/contacts', [
+            'name' => 'Maria de Lourdes',
+            'email' => 'mariaemail.com',
+            'phone' => '87996236447',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors('email');
     }
 }

@@ -21,6 +21,11 @@ class ContactFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->email(),
             'phone' => fake()->phoneNumber(),
+
+            // Tomei a iniciativa de criar os valores default na factory, pois os testes estavam dando erro
+            // e precisariam do método 'refresh()' para que os valores default fossem efetivados antes das asserções
+            'score' => 0,
+            'status' => 'pending',
         ];
     }
 }

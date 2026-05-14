@@ -22,7 +22,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = Contact::paginate();
+        $contacts = $this->contactRepo->paginate();
 
         return BaseContactResource::collection($contacts);
     }
@@ -46,7 +46,9 @@ class ContactController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $contact = $this->contactRepo->find($id);
+
+        return new BaseContactResource($contact);
     }
 
     /**

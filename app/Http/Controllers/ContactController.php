@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contact;
 use App\Repositories\ContactRepository;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,9 @@ class ContactController extends Controller
      */
     public function index()
     {
-        //
+        $contacts = Contact::paginate();
+
+        return response($contacts);
     }
 
     /**

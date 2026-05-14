@@ -16,17 +16,17 @@ class ContactController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the contact.
      */
     public function index()
     {
         $contacts = Contact::paginate();
 
-        return response($contacts);
+        return response($contacts, 200);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created contact in storage.
      */
     public function store(Request $request)
     {
@@ -46,7 +46,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified contact.
      */
     public function show(string $id)
     {
@@ -54,7 +54,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified contact in storage.
      */
     public function update(Request $request, string $id)
     {
@@ -62,7 +62,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified contact from storage.
      */
     public function destroy(string $id)
     {

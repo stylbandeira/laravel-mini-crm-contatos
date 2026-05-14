@@ -9,6 +9,7 @@ use Tests\TestCase;
 
 class CreateContactTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * Assert that a contact can be created.
      */
@@ -22,7 +23,7 @@ class CreateContactTest extends TestCase
 
         $response->assertCreated();
 
-        $this->assertDatabaseHas('contacts', [
+        $this->assertDatabaseHas('contact', [
             'email' => 'maria@email.com',
         ]);
     }
@@ -40,7 +41,7 @@ class CreateContactTest extends TestCase
 
         $response->assertCreated();
 
-        $this->assertDatabaseHas('contacts', [
+        $this->assertDatabaseHas('contact', [
             'email' => 'maria@email.com',
             'status' => 'pending',
             'score' => '0'
@@ -101,8 +102,9 @@ class CreateContactTest extends TestCase
             'phone' => '87996236447',
         ]);
 
+        $this->assertDatabaseCount('contact', 1);
+
         $response->assertStatus(422)
-            ->assertDatabaseCount('contact', 1)
             ->assertJsonValidationErrors('email');
     }
 }

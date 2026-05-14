@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BaseContactResource;
 use App\Models\Contact;
 use App\Repositories\ContactRepository;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class ContactController extends Controller
     {
         $contacts = Contact::paginate();
 
-        return response($contacts, 200);
+        return BaseContactResource::collection($contacts);
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Http\Resources\BaseContactResource;
 use App\Models\Contact;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class ListContactsTest extends TestCase
@@ -39,27 +40,37 @@ class ListContactsTest extends TestCase
         $response = $this->getJson('/api/contacts');
 
         $response->assertJsonStructure([
-            'current_page',
             'data' => [
                 '*' => [
                     'id',
                     'name',
                     'email',
-                    'created_at',
-                    'updated_at',
                 ]
             ],
-            'first_page_url',
-            'from',
-            'last_page',
-            'last_page_url',
-            'links',
-            'next_page_url',
-            'path',
-            'per_page',
-            'prev_page_url',
-            'to',
-            'total',
+            'links' => [
+                'first',
+                'last',
+                'prev',
+                'next'
+            ],
+            'meta' => [
+                'current_page',
+                'from',
+                'last_page',
+                'links' => [
+                    '*' => [
+                        'url',
+                        'label',
+                        'page',
+                        'active'
+                    ]
+                ],
+
+                'path',
+                'per_page',
+                'to',
+                'total',
+            ]
         ])
             ->assertStatus(200);
     }
@@ -69,12 +80,12 @@ class ListContactsTest extends TestCase
      */
     public function test_returned_data_fields(): void
     {
-        $contact = Contact::factory()->create();
+        $contact = Contact::factory()->count(2)->create();
 
         $response = $this->getJson('/api/contacts');
 
         $response->assertJsonFragment(
-            (new BaseContactResource($contact))->response()->getData(true)
+            (BaseContactResource::collection($contact))->response()->getData(true)
         )
             ->assertStatus(200);
     }

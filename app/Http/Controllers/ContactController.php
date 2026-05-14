@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreContactRequest;
 use App\Http\Resources\BaseContactResource;
 use App\Models\Contact;
 use App\Repositories\ContactRepository;
@@ -29,15 +30,9 @@ class ContactController extends Controller
     /**
      * Store a newly created contact in storage.
      */
-    public function store(Request $request)
+    public function store(StoreContactRequest $request)
     {
-        $request->validate([
-            'name' => 'required | string',
-            'email' => 'required | email | unique:contact,email',
-            'phone' => 'required | string'
-        ]);
-
-        $contact = $this->contactRepo->create($request->all());
+        $contact = $this->contactRepo->create($request->validated());
 
 
         return response([

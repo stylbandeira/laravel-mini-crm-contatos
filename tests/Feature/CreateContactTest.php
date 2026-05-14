@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Contact;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -77,7 +78,7 @@ class CreateContactTest extends TestCase
     }
 
     /**
-     * Assert that a email is an email.
+     * Assert that only a contact with an valid email can be registered.
      */
     public function test_validation_email_type(): void
     {
@@ -88,6 +89,20 @@ class CreateContactTest extends TestCase
         ]);
 
         $response->assertStatus(422)
+            ->assertJsonValidationErrors('email');
+
+        Contact::factory()->create([
+            'email' => 'maria@gmail.com'
+        ]);
+
+        $response = $this->postJson('/api/contacts', [
+            'name' => 'Maria de Lourdes',
+            'email' => 'maria@gmail.com',
+            'phone' => '87996236447',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertDatabaseCount('contact', 1)
             ->assertJsonValidationErrors('email');
     }
 }

@@ -11,7 +11,7 @@ class CreateContactTest extends TestCase
     /**
      * Assert that a contact can be created.
      */
-    public function create_contact_is_ok(): void
+    public function test_create_contact_is_ok(): void
     {
         $response = $this->postJson('/api/contacts', [
             'name' => 'Maria de Lourdes',
@@ -29,7 +29,7 @@ class CreateContactTest extends TestCase
     /**
      * Assert that a created contact has its default fields.
      */
-    public function created_contact_has_default_fields(): void
+    public function test_created_contact_has_default_fields(): void
     {
         $response = $this->postJson('/api/contacts', [
             'name' => 'Maria de Lourdes',
@@ -49,7 +49,7 @@ class CreateContactTest extends TestCase
     /**
      * Assert that a created contact with no name fails.
      */
-    public function created_contact_with_no_name_dont_pass(): void
+    public function test_created_contact_with_no_name_dont_pass(): void
     {
         $response = $this->postJson('/api/contacts', [
             'email' => 'maria@email.com',
@@ -62,7 +62,7 @@ class CreateContactTest extends TestCase
     /**
      * Assert that a created contact with no email fails.
      */
-    public function created_contact_with_no_email_dont_pass(): void
+    public function test_created_contact_with_no_email_dont_pass(): void
     {
         $response = $this->postJson('/api/contacts', [
             'name' => 'Maria de Lourdes',
@@ -75,7 +75,7 @@ class CreateContactTest extends TestCase
     /**
      * Assert that a created contact with no phone fails.
      */
-    public function created_contact_with_no_phone_dont_pass(): void
+    public function test_created_contact_with_no_phone_dont_pass(): void
     {
         $response = $this->postJson('/api/contacts', [
             'name' => 'Maria de Lourdes',

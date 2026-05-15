@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreContactRequest;
+use App\Http\Requests\UpdateContactRequest;
 use App\Http\Resources\BaseContactResource;
 use App\Models\Contact;
 use App\Repositories\ContactRepository;
@@ -54,9 +55,11 @@ class ContactController extends Controller
     /**
      * Update the specified contact in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateContactRequest $request, string $id)
     {
-        //
+        $contact = $this->contactRepo->update($id, $request->validated());
+
+        return new BaseContactResource($contact);
     }
 
     /**

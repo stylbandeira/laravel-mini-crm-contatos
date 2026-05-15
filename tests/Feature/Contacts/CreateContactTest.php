@@ -4,27 +4,42 @@ namespace Tests\Feature;
 
 use App\Models\Contact;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Support\ContactTestData;
 use Tests\TestCase;
 
 class CreateContactTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, ContactTestData;
+    protected $route = '/api/contacts';
+
     /**
      * Assert that a contact can be created.
      */
     public function test_create_contact_is_ok(): void
     {
-        $response = $this->postJson('/api/contacts', [
-            'name' => 'Maria de Lourdes',
-            'email' => 'maria@email.com',
-            'phone' => '87996236447',
-        ]);
+        $response = $this->postJson($this->route, $this->validContactPayload());
 
         $response->assertCreated();
 
         $this->assertDatabaseHas('contact', [
-            'email' => 'maria@email.com',
+            'email' => 'maria@gmail.com',
         ]);
+    }
+
+    /**
+     * Tests that email is unique
+     *
+     * @return void
+     */
+    public function test_unique_email_validation(): void
+    {
+        $contact = Contact::factory()->create();
+
+        $response = $this->postJson($this->route, $this->validContactPayload([
+            'email' => $contact->email
+        ]));
+
+        $response->assertJsonValidationErrors('email');
     }
 
     /**
@@ -32,16 +47,12 @@ class CreateContactTest extends TestCase
      */
     public function test_created_contact_has_default_fields(): void
     {
-        $response = $this->postJson('/api/contacts', [
-            'name' => 'Maria de Lourdes',
-            'email' => 'maria@email.com',
-            'phone' => '87996236447',
-        ]);
+        $response = $this->postJson($this->route, $this->validContactPayload());
 
         $response->assertCreated();
 
         $this->assertDatabaseHas('contact', [
-            'email' => 'maria@email.com',
+            'email' => 'maria@gmail.com',
             'status' => 'pending',
             'score' => '0'
         ]);
@@ -52,15 +63,15 @@ class CreateContactTest extends TestCase
      */
     public function test_validation_required_fields(): void
     {
-        $response = $this->postJson('/api/contacts', [
-            'email' => 'maria@email.com',
+        $response = $this->postJson($this->route, [
+            'email' => 'maria@gmail.com',
             'phone' => '87996236447',
         ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors('name');
 
-        $response = $this->postJson('/api/contacts', [
+        $response = $this->postJson($this->route, [
             'name' => 'Maria de Lourdes',
             'phone' => '87996236447',
         ]);
@@ -68,9 +79,9 @@ class CreateContactTest extends TestCase
         $response->assertStatus(422)
             ->assertJsonValidationErrors('email');
 
-        $response = $this->postJson('/api/contacts', [
+        $response = $this->postJson($this->route, [
             'name' => 'Maria de Lourdes',
-            'email' => 'maria@email.com',
+            'email' => 'maria@gmail.com',
         ]);
 
         $response->assertStatus(422)
@@ -82,28 +93,17 @@ class CreateContactTest extends TestCase
      */
     public function test_validation_email_type(): void
     {
-        $response = $this->postJson('/api/contacts', [
-            'name' => 'Maria de Lourdes',
+        $response = $this->postJson($this->route, $this->validContactPayload([
             'email' => 'mariaemail.com',
-            'phone' => '87996236447',
-        ]);
+        ]));
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors('email');
 
-        Contact::factory()->create([
-            'email' => 'maria@gmail.com'
-        ]);
-
-        $response = $this->postJson('/api/contacts', [
-            'name' => 'Maria de Lourdes',
-            'email' => 'maria@gmail.com',
-            'phone' => '87996236447',
-        ]);
+        $response = $this->postJson($this->route, $this->validContactPayload());
 
         $this->assertDatabaseCount('contact', 1);
 
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors('email');
+        $response->assertStatus(201);
     }
 }

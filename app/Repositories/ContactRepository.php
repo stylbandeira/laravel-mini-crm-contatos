@@ -43,6 +43,8 @@ class ContactRepository
 
     public function delete($id)
     {
-        return $this->contact->destroy($id);
+        $contact = $this->find($id);
+
+        return $contact->destroy($id);
     }
 }

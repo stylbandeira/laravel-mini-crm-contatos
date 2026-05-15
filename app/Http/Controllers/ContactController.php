@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Application\Contact\UseCases\CreateContactUseCase;
+use App\Application\Contact\UseCases\DeleteContactUseCase;
+use App\Application\Contact\UseCases\UpdateContactUseCase;
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Http\Resources\BaseContactResource;
+use App\Jobs\ProcessContactScoreJob;
 use App\Models\Contact;
 use App\Repositories\ContactRepository;
 use Illuminate\Http\Request;
@@ -13,8 +17,12 @@ class ContactController extends Controller
 {
     protected ContactRepository $contactRepo;
 
-    public function __construct(ContactRepository $contactRepo)
-    {
+    public function __construct(
+        ContactRepository $contactRepo,
+        private CreateContactUseCase $createContactUseCase,
+        private UpdateContactUseCase $updateContactUseCase,
+        private DeleteContactUseCase $deleteContactUseCase,
+    ) {
         $this->contactRepo = $contactRepo;
     }
 
@@ -33,7 +41,7 @@ class ContactController extends Controller
      */
     public function store(StoreContactRequest $request)
     {
-        $contact = $this->contactRepo->create($request->validated());
+        $contact = $this->createContactUseCase->execute($request->validated());
 
 
         return response([
@@ -57,7 +65,7 @@ class ContactController extends Controller
      */
     public function update(UpdateContactRequest $request, string $id)
     {
-        $contact = $this->contactRepo->update($id, $request->validated());
+        $contact = $this->updateContactUseCase->execute($id, $request->validated());
 
         return new BaseContactResource($contact);
     }
@@ -67,7 +75,7 @@ class ContactController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->contactRepo->delete($id);
+        $this->deleteContactUseCase->execute($id);
 
         return response([
             'message' => 'Contato deletado com sucesso!'
@@ -80,5 +88,15 @@ class ContactController extends Controller
      * @param string $id
      * @return void
      */
-    public function processScore(string $id) {}
+    public function processScore(string $id)
+    {
+        $contact = $this->contactRepo->find($id);
+
+        ProcessContactScoreJob::dispatch($contact->id);
+
+        return response([
+            'message' => 'Processamento de score enfileirado com sucesso!',
+            'data' => new BaseContactResource($contact)
+        ], 202);
+    }
 }

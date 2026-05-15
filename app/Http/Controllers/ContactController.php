@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Application\Contact\UseCases\CreateContactUseCase;
 use App\Application\Contact\UseCases\DeleteContactUseCase;
+use App\Application\Contact\UseCases\ProcessContactUseCase;
 use App\Application\Contact\UseCases\UpdateContactUseCase;
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Http\Resources\BaseContactResource;
-use App\Jobs\ProcessContactScoreJob;
-use App\Models\Contact;
 use App\Repositories\ContactRepository;
 use Illuminate\Http\Request;
 
@@ -22,6 +21,7 @@ class ContactController extends Controller
         private CreateContactUseCase $createContactUseCase,
         private UpdateContactUseCase $updateContactUseCase,
         private DeleteContactUseCase $deleteContactUseCase,
+        private ProcessContactUseCase $processContactUseCase,
     ) {
         $this->contactRepo = $contactRepo;
     }
@@ -90,9 +90,7 @@ class ContactController extends Controller
      */
     public function processScore(string $id)
     {
-        $contact = $this->contactRepo->find($id);
-
-        ProcessContactScoreJob::dispatch($contact->id);
+        $contact = $this->processContactUseCase->execute($id);
 
         return response([
             'message' => 'Processamento de score enfileirado com sucesso!',

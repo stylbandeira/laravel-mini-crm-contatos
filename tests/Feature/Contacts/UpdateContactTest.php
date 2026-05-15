@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Resources\BaseContactResource;
 use App\Models\Contact;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Support\ContactTestData;
@@ -35,7 +36,9 @@ class UpdateContactTest extends TestCase
 
         $this->assertDatabaseCount('contact', 1);
 
-        $response->assertStatus(200);
+        $response->assertJsonFragment(
+            (new BaseContactResource($contact))->response()->getData(true)
+        )->assertStatus(200);
     }
 
     /**
@@ -98,7 +101,9 @@ class UpdateContactTest extends TestCase
 
             $this->assertDatabaseCount('contact', 1);
 
-            $response->assertStatus(200);
+            $response->assertJsonFragment(
+                (new BaseContactResource($contact))->response()->getData(true)
+            )->assertStatus(200);
         }
 
         $this->assertDatabaseCount('contact', 1);

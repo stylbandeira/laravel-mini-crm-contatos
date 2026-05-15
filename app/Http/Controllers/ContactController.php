@@ -73,4 +73,12 @@ class ContactController extends Controller
             'message' => 'Contato deletado com sucesso!'
         ]);
     }
+
+    /**
+     * Process score for an contact
+     *
+     * @param string $id
+     * @return void
+     */
+    public function processScore(string $id) {}
 }

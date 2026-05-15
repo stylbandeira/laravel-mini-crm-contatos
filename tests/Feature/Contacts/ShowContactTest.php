@@ -13,7 +13,7 @@ class ShowContactTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * A basic feature test example.
+     * Tests the resource return fields.
      */
     public function test_resource_fields(): void
     {

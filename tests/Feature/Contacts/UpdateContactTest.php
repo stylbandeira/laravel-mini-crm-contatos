@@ -64,7 +64,7 @@ class UpdateContactTest extends TestCase
     }
 
     /**
-     * Tests that email is unique
+     * Tests string size validation
      *
      * @return void
      */

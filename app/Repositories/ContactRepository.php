@@ -38,7 +38,7 @@ class ContactRepository
     {
         $record = $this->find($id);
         $record->update($data);
-        return $record;
+        return $record->fresh();
     }
 
     public function delete($id)

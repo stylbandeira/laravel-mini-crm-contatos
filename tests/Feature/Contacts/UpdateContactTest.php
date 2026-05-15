@@ -52,11 +52,28 @@ class UpdateContactTest extends TestCase
             'email' => 'email2@gmail.com'
         ]);
 
-        $response = $this->postJson($this->route . $contact_two->id, [
+        $response = $this->putJson($this->route . $contact_two->id, [
             'email' => $contact_one->email
         ]);
 
         $response->assertJsonValidationErrors('email');
+    }
+
+    /**
+     * Tests that email is unique
+     *
+     * @return void
+     */
+    public function test_string_size_validation(): void
+    {
+        $contact = Contact::factory()->create();
+
+        $response = $this->putJson($this->route . $contact->id, [
+            'name' => str_repeat('a', 300),
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors('name');
     }
 
     /**
@@ -75,7 +92,7 @@ class UpdateContactTest extends TestCase
         ];
 
         foreach ($fields as $field => $value) {
-            $response = $this->postJson($this->route . $contact->id, [
+            $response = $this->putJson($this->route . $contact->id, [
                 $field => $value
             ]);
 
@@ -102,7 +119,7 @@ class UpdateContactTest extends TestCase
         ];
 
         foreach ($fields as $field => $value) {
-            $response = $this->postJson($this->route . $contact->id, [
+            $response = $this->putJson($this->route . $contact->id, [
                 $field => $value
             ]);
 

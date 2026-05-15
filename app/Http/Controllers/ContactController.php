@@ -67,6 +67,10 @@ class ContactController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $this->contactRepo->delete($id);
+
+        return response([
+            'message' => 'Contato deletado com sucesso!'
+        ]);
     }
 }

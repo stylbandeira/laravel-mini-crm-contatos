@@ -49,4 +49,22 @@ class DeleteContactTest extends TestCase
 
         $this->assertDatabaseCount('contact', 1);
     }
+
+    /**
+     * Tests that a deleted contact is softDeleted, appearing on database even after deletion
+     *
+     * @return void
+     */
+    public function test_that_a_not_existing_contact_show_error(): void
+    {
+        $contact = Contact::factory()->create([
+            'id' => 21
+        ]);
+
+        $response = $this->delete($this->route . 2);
+
+        $response->assertStatus(404);
+
+        $this->assertDatabaseCount('contact', 1);
+    }
 }

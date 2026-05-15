@@ -43,6 +43,20 @@ class CreateContactTest extends TestCase
     }
 
     /**
+     * Tests that email is unique
+     *
+     * @return void
+     */
+    public function test_string_size_validation(): void
+    {
+        $response = $this->postJson($this->route, $this->validContactPayload([
+            'name' => str_repeat('a', 300),
+        ]));
+
+        $response->assertJsonValidationErrors('name');
+    }
+
+    /**
      * Assert that a created contact has its default fields.
      */
     public function test_created_contact_has_default_fields(): void

@@ -57,7 +57,7 @@ class DeleteContactTest extends TestCase
      */
     public function test_that_a_not_existing_contact_show_error(): void
     {
-        $contact = Contact::factory()->create([
+        Contact::factory()->create([
             'id' => 21
         ]);
 

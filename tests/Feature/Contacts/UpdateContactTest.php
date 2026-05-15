@@ -137,4 +137,24 @@ class UpdateContactTest extends TestCase
 
         $this->assertDatabaseCount('contact', 1);
     }
+
+    /**
+     * Tests that trying to update a not existing contact returns an error
+     *
+     * @return void
+     */
+    public function test_404_not_found(): void
+    {
+        Contact::factory()->create([
+            'id' => 21
+        ]);
+
+        $response = $this->putJson($this->route . 2, [
+            'name' => 'Styl Bandeira'
+        ]);
+
+        $response->assertStatus(404);
+
+        $this->assertDatabaseCount('contact', 1);
+    }
 }

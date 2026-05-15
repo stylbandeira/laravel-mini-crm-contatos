@@ -12,6 +12,8 @@ class ShowContactTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $route = '/api/contacts/';
+
     /**
      * Tests the resource return fields.
      */
@@ -19,12 +21,30 @@ class ShowContactTest extends TestCase
     {
         $contact = Contact::factory()->create();
 
-        $response = $this->get('/api/contacts/' . $contact->id);
+        $response = $this->get($this->route . $contact->id);
 
         $response
             ->assertJsonFragment(
                 (new BaseContactResource($contact))->response()->getData(true)
             )
             ->assertStatus(200);
+    }
+
+    /**
+     * Tests that a not existing contact returns an error
+     *
+     * @return void
+     */
+    public function test_404_not_found(): void
+    {
+        Contact::factory()->create([
+            'id' => 21
+        ]);
+
+        $response = $this->get($this->route . 2);
+
+        $response->assertStatus(404);
+
+        $this->assertDatabaseCount('contact', 1);
     }
 }

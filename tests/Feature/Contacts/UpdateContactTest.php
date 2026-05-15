@@ -35,6 +35,7 @@ class UpdateContactTest extends TestCase
         ]);
 
         $this->assertDatabaseCount('contact', 1);
+        $contact->refresh();
 
         $response->assertJsonFragment(
             (new BaseContactResource($contact))->response()->getData(true)
@@ -100,6 +101,7 @@ class UpdateContactTest extends TestCase
             ]);
 
             $this->assertDatabaseCount('contact', 1);
+            $contact->refresh();
 
             $response->assertJsonFragment(
                 (new BaseContactResource($contact))->response()->getData(true)

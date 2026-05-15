@@ -25,7 +25,7 @@ class UpdateContactRequest extends FormRequest
         return [
             'name' => ['sometimes', 'string', 'max:255'],
             'email' => ['sometimes', 'email', 'unique:contact,email'],
-            'phone' => ['sometimes', 'string'],
+            'phone' => ['sometimes', 'string', 'min:11', 'max:11'],
             'score' => ['sometimes', 'prohibited'],
             'status' => ['sometimes', 'prohibited'],
         ];

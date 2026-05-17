@@ -2,12 +2,18 @@
 
 namespace App\Domain\Services;
 
+use App\Domain\Services\ScoreRules\ScoreRule;
 use App\Models\Contact;
 
 class ContactScoreCalculatorService
 {
-    public function calculate(Contact $contact)
+    public function __construct(
+        private array $rules
+    ) {}
+
+    public function calculate(Contact $contact): int
     {
-        return $contact;
+        return collect($this->rules)
+            ->sum(fn(ScoreRule $rule) => $rule->calculate($contact));
     }
 }

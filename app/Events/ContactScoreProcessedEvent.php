@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Contact;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -17,8 +18,9 @@ class ContactScoreProcessedEvent
     /**
      * Create a new event instance.
      */
-    public function __construct()
-    {
+    public function __construct(
+        public Contact $contact
+    ) {
         //
     }
 

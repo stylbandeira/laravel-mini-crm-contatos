@@ -15,5 +15,7 @@ class Contact extends Model
         'name',
         'email',
         'phone',
+        'status',
+        'processed_at',
     ];
 }

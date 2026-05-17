@@ -5,6 +5,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     zip \
     curl \
+    nodejs \
+    npm \
     libpng-dev \
     libonig-dev \
     libxml2-dev \

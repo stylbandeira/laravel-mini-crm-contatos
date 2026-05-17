@@ -2,17 +2,16 @@
 
 namespace App\Application\Contact\UseCases;
 
-use App\Models\Contact;
-use App\Repositories\ContactRepository;
+use App\Domain\Contact\Repositories\ContactRepositoryInterface;
 
 class DeleteContactUseCase
 {
     public function __construct(
-        private ContactRepository $contactRepo
+        private ContactRepositoryInterface $contactRepo
     ) {}
 
-    public function execute(string $id): Int
+    public function execute(string $id): void
     {
-        return $this->contactRepo->delete($id);
+        $this->contactRepo->delete($id);
     }
 }

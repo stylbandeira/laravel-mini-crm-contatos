@@ -2,13 +2,13 @@
 
 namespace App\Application\Contact\UseCases;
 
+use App\Domain\Contact\Repositories\ContactRepositoryInterface;
 use App\Models\Contact;
-use App\Repositories\ContactRepository;
 
 class CreateContactUseCase
 {
     public function __construct(
-        private ContactRepository $contactRepo
+        private ContactRepositoryInterface $contactRepo
     ) {}
 
     public function execute(array $data): Contact

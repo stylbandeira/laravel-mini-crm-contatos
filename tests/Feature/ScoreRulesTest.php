@@ -7,7 +7,6 @@ use App\Domain\Services\ScoreRules\NameScoreRule;
 use App\Domain\Services\ScoreRules\PhoneScoreRule;
 use App\Models\Contact;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ScoreRulesTest extends TestCase

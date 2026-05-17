@@ -6,7 +6,6 @@ use App\Events\ContactScoreProcessedEvent;
 use App\Models\Contact;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class BroadcastReverbTest extends TestCase

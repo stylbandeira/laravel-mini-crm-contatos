@@ -10,7 +10,6 @@ use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Http\Resources\BaseContactResource;
 use App\Repositories\ContactRepository;
-use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {

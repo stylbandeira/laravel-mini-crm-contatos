@@ -8,6 +8,7 @@ use App\Jobs\ProcessContactScoreJob;
 use App\Models\Contact;
 use App\Repositories\ContactRepository;
 use Exception;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 use Mockery;
@@ -16,6 +17,7 @@ use Tests\TestCase;
 
 class ScoreJobTest extends TestCase
 {
+    use RefreshDatabase;
 
     public function test_job_change_status_to_processing()
     {
@@ -226,25 +228,37 @@ class ScoreJobTest extends TestCase
 
     public function test_contact_score_processed_event_is_dispatched()
     {
-        Queue::fake();
         Event::fake();
 
         $contact = Contact::factory()->create();
 
-        $job = new ProcessContactScoreJob($contact->id);
-
         $calculator = Mockery::mock(ContactScoreCalculatorService::class);
+
+        $calculator
+            ->shouldReceive('calculate')
+            ->once()
+            ->andReturn(50);
+
+        $job = new ProcessContactScoreJob($contact->id);
 
         $job->handle(
             app(ContactRepository::class),
             $calculator
         );
 
-        Event::assertDispatched(ContactScoreProcessedEvent::class, function ($event) use ($contact) {
-            $event->contact->id === $contact->id;
-        });
+        Event::assertDispatched(
+            ContactScoreProcessedEvent::class,
+            function ($event) use ($contact) {
+                return $event->contact->id === $contact->id;
+            }
+        );
     }
 
+    /**
+     * Returns valid Sao Paulo ddd's
+     *
+     * @return array
+     */
     public static function validSaoPauloDdds(): array
     {
         return [

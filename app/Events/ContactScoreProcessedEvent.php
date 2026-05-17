@@ -4,35 +4,36 @@ namespace App\Events;
 
 use App\Models\Contact;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ContactScoreProcessedEvent
+class ContactScoreProcessedEvent implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, SerializesModels;
 
-    /**
-     * Create a new event instance.
-     */
     public function __construct(
         public Contact $contact
-    ) {
-        //
+    ) {}
+
+    public function broadcastOn(): Channel
+    {
+        return new Channel('contacts.' . $this->contact->id);
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, Channel>
-     */
-    public function broadcastOn(): array
+    public function broadcastAs(): string
+    {
+        return 'contact.score.processed';
+    }
+
+    public function broadcastWith(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+            'id' => $this->contact->id,
+            'email' => $this->contact->email,
+            'score' => $this->contact->score,
+            'status' => $this->contact->status,
+            'processed_at' => $this->contact->processed_at,
         ];
     }
 }

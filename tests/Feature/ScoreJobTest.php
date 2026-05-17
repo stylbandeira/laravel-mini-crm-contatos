@@ -214,6 +214,11 @@ class ScoreJobTest extends TestCase
 
         $calculator = Mockery::mock(ContactScoreCalculatorService::class);
 
+        $calculator
+            ->shouldReceive('calculate')
+            ->once()
+            ->andReturn(50);
+
         $job->handle(
             app(ContactRepository::class),
             $calculator
@@ -222,7 +227,7 @@ class ScoreJobTest extends TestCase
         $this->assertDatabaseHas('contact', [
             'id' => $contact->id,
             'status' => 'active',
-            'processed_at' => not(null)
+            'processed_at' => now()
         ]);
     }
 

@@ -2,9 +2,10 @@
 
 namespace App\Domain\Services\ScoreRules;
 
+use App\Domain\Services\ScoreRules\ScoreRule;
 use App\Models\Contact;
 
-class PhoneExistsScoreRule implements ScoreRule
+class PhoneScoreRule implements ScoreRule
 {
     public function calculate(Contact $contact): int
     {
@@ -12,14 +13,16 @@ class PhoneExistsScoreRule implements ScoreRule
             return 0;
         }
 
-        $phone = preg_replace('/\D/', '', $contact->phone);
+        $phone = preg_replace(
+            '/\D/',
+            '',
+            $contact->phone
+        );
 
-        $ddd = substr($phone, 0, 2);
+        $ddd = (int) substr($phone, 0, 2);
 
-        if ($ddd >= 11 && $ddd <= 19) {
-            return 20;
-        }
-
-        return 10;
+        return $ddd >= 11 && $ddd <= 19
+            ? 20
+            : 10;
     }
 }

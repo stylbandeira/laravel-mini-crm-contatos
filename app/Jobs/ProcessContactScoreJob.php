@@ -33,7 +33,7 @@ class ProcessContactScoreJob implements ShouldQueue
         try {
             $this->markAsProcessing($contact);
 
-            // sleep(2);
+            sleep(2);
 
             $score = $calculator->calculate($contact);
 

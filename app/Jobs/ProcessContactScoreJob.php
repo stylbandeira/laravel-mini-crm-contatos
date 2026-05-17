@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Domain\Services\ContactScoreCalculatorService;
+use App\Events\ContactScoreProcessedEvent;
+use App\Models\Contact;
 use App\Repositories\ContactRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -27,12 +29,11 @@ class ProcessContactScoreJob implements ShouldQueue
         ContactScoreCalculatorService $calculator
     ): void {
         $contact = $contactRepo->find($this->contactId);
-        $contact = $contactRepo->find($this->contactId);
 
         try {
-            $contact->update([
-                'status' => 'processing',
-            ]);
+            $this->markAsProcessing($contact);
+
+            // sleep(2);
 
             $score = $calculator->calculate($contact);
 
@@ -41,6 +42,8 @@ class ProcessContactScoreJob implements ShouldQueue
                 'status' => 'active',
                 'processed_at' => now(),
             ]);
+
+            ContactScoreProcessedEvent::dispatch($contact->fresh());
         } catch (Throwable $e) {
             $contact->update([
                 'status' => 'failed',
@@ -48,5 +51,12 @@ class ProcessContactScoreJob implements ShouldQueue
 
             throw $e;
         }
+    }
+
+    private function markAsProcessing(Contact $contact): void
+    {
+        $contact->update([
+            'status' => 'processing',
+        ]);
     }
 }

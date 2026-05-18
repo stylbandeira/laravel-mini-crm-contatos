@@ -14,6 +14,10 @@ class ContactScoreCalculatorService
     public function calculate(Contact $contact): int
     {
         return collect($this->rules)
-            ->sum(fn(ScoreRule $rule) => $rule->calculate($contact));
+            ->sum(function (ScoreRule $rule) use ($contact) {
+                $points = $rule->calculate($contact);
+
+                return $points;
+            });
     }
 }

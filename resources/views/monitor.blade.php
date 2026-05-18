@@ -2,38 +2,34 @@
 <html>
 
 <head>
-    <title>Contact Monitor</title>
-
+    <title>Monitor de Processamentos</title>
     @vite(['resources/js/app.js'])
 </head>
 
 <body>
+    <h1>Monitor de Processamentos</h1>
 
-    <h1>Realtime Contact Monitor</h1>
-
-    <div id="contact-status">
-        Waiting updates...
-    </div>
+    <ul id="events"></ul>
 
     <script type="module">
-        const contactId = 1;
-
         window.Echo
-            .channel(`contacts.${contactId}`)
+            .channel('contacts')
             .listen('.contact.score.processed', (event) => {
+                console.log('Evento recebido:', event);
 
-                console.log(event);
+                const li = document.createElement('li');
 
-                document.getElementById('contact-status')
-                    .innerHTML = `
-                        <p><strong>ID:</strong> ${event.id}</p>
-                        <p><strong>Email:</strong> ${event.email}</p>
-                        <p><strong>Score:</strong> ${event.score}</p>
-                        <p><strong>Status:</strong> ${event.status}</p>
-                    `;
+                li.innerHTML = `
+                    <strong>ID:</strong> ${event.id} |
+                    <strong>Email:</strong> ${event.email} |
+                    <strong>Score:</strong> ${event.score} |
+                    <strong>Status:</strong> ${event.status} |
+                    <strong>Processado em:</strong> ${event.processed_at}
+                `;
+
+                document.getElementById('events').prepend(li);
             });
     </script>
-
 </body>
 
 </html>

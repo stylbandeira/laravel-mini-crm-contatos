@@ -9,3 +9,9 @@ Route::get('/', function () {
 Route::get('/monitor', function () {
     return view('monitor');
 });
+
+Route::get('/monitor/{contact}', function ($contact) {
+    return view('monitor', [
+        'contactId' => $contact,
+    ]);
+});

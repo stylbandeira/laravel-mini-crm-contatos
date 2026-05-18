@@ -17,5 +17,6 @@ class Contact extends Model
         'phone',
         'status',
         'processed_at',
+        'score'
     ];
 }

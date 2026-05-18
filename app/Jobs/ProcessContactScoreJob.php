@@ -6,6 +6,7 @@ use App\Domain\Services\ContactScoreCalculatorService;
 use App\Events\ContactScoreProcessedEvent;
 use App\Models\Contact;
 use App\Repositories\ContactRepository;
+use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Throwable;
@@ -40,7 +41,7 @@ class ProcessContactScoreJob implements ShouldQueue
             $contact->update([
                 'score' => $score,
                 'status' => 'active',
-                'processed_at' => now(),
+                'processed_at' => Carbon::now(),
             ]);
 
             ContactScoreProcessedEvent::dispatch($contact->fresh());

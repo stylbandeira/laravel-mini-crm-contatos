@@ -20,11 +20,16 @@ class BroadcastReverbTest extends TestCase
 
         $channels = $event->broadcastOn();
 
-        $this->assertInstanceOf(Channel::class, $channels);
+        $this->assertIsArray($channels);
+
+        $this->assertEquals(
+            'contacts',
+            $channels[0]->name
+        );
 
         $this->assertEquals(
             'contacts.' . $contact->id,
-            $channels->name
+            $channels[1]->name
         );
     }
 
